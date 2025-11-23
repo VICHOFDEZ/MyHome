@@ -1,4 +1,9 @@
 import 'package:flutter/material.dart';
+import 'emergency_info_screen.dart';
+import 'emergency_profile_screen.dart';
+import '../services/emergency_profile_storage.dart';
+
+
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -38,18 +43,50 @@ class HomeScreen extends StatelessWidget {
                 crossAxisSpacing: 10,
                 children: [
                   _QuickAccessButton(icon: Icons.restaurant, label: 'Comida'),
-                  _QuickAccessButton(icon: Icons.cleaning_services, label: 'Limpieza'),
+                  _QuickAccessButton(icon: Icons.calculate, label: 'Simulador'),
                   _QuickAccessButton(icon: Icons.build, label: 'Mantención'),
                   _QuickAccessButton(icon: Icons.school, label: 'Tutores'),
                   _QuickAccessButton(icon: Icons.alarm, label: 'Recordatorio'),
                   _QuickAccessButton(icon: Icons.verified_user, label: 'Zonas Peligrosas'),
                   _QuickAccessButton(icon: Icons.explore, label: 'Vias Reversibles'),
+                  _QuickAccessButton(icon: Icons.self_improvement, label: 'Bienestar & Calma'),
                 ],
               ),
             ),
           ],
         ),
       ),
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () async {
+         // 1. Cargamos el perfil desde SharedPreferences
+          final profile = await EmergencyProfileStorage.loadProfile();
+
+         // 2. Si NO hay datos -> mandamos a registrar datos
+          if (profile == null) {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const EmergencyProfileScreen(),
+              ),
+            );
+          } else {
+            // 3. Si SÍ hay datos -> vamos al botón de pánico
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const EmergencyInfoScreen(),
+              ),
+            );
+          }
+        },
+        backgroundColor: Colors.red,
+        icon: const Icon(Icons.phone, color: Colors.white),
+        label: const Text(
+          'S.O.S',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
 }
@@ -78,13 +115,16 @@ class _QuickAccessButton extends StatelessWidget {
             Navigator.pushNamed(context, '/food');
             break;
           case 'Limpieza':
-            Navigator.pushNamed(context, '/cleaning');
+            Navigator.pushNamed(context, '/simulador');
             break;
           case 'Zonas Peligrosas':
             Navigator.pushNamed(context, '/zonas');
             break;
           case 'Vias Reversibles':
             Navigator.pushNamed(context, '/vias');
+            break;
+          case 'Bienestar & Calma':
+            Navigator.pushNamed(context, '/bienestar');
             break;
           default:
             ScaffoldMessenger.of(context).showSnackBar(

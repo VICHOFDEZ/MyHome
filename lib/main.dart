@@ -8,11 +8,12 @@ import 'screens/reminders_screen.dart';
 import 'screens/technicians_screen.dart';
 import 'screens/classes_screen.dart';
 import 'screens/food_screen.dart';
-import 'screens/cleaning_screen.dart';
+import 'screens/simulador_vida_foranea_screen.dart';
 import 'screens/quick_help_screen.dart';
 import 'screens/nearby_technicians_screen.dart';
 import 'screens/zonas_peligrosas_screen.dart';
 import 'screens/vias_reversibles_screen.dart';
+import 'screens/bienestar_calma_screen.dart';
 
 
 // === Configuración del plugin de notificaciones ===
@@ -70,11 +71,12 @@ class MyHomeApp extends StatelessWidget {
         '/technicians': (context) => const TechniciansScreen(),
         '/classes': (context) => const ClassesScreen(),
         '/food': (context) => const FoodScreen(),
-        '/cleaning': (context) => const CleaningScreen(),
+        '/simulador': (context) => const SimuladorVidaForaneaScreen(),
         '/nearbyTechnicians': (context) => const NearbyTechniciansScreen(),
         '/quickHelp': (context) => const QuickHelpScreen(),
         '/zonas': (context) => const ZonasPeligrosasScreen(),
         '/vias': (context) => const ViasReversiblesMapScreen(),
+        '/bienestar': (context) => const BienestarCalmaScreen(),
 
       },
     );
