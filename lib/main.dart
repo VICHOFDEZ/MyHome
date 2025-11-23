@@ -74,7 +74,7 @@ class MyHomeApp extends StatelessWidget {
         '/nearbyTechnicians': (context) => const NearbyTechniciansScreen(),
         '/quickHelp': (context) => const QuickHelpScreen(),
         '/zonas': (context) => const ZonasPeligrosasScreen(),
-        '/vias': (context) => const ViasReversiblesScreen(),
+        '/vias': (context) => const ViasReversiblesMapScreen(),
 
       },
     );

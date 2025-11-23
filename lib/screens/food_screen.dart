@@ -50,7 +50,7 @@ class _FoodScreenState extends State<FoodScreen> {
       return;
     }
 
-    await _loadNearbyPlaces(position!.latitude, position.longitude);
+    await _loadNearbyPlaces(position.latitude, position.longitude);
   }
 
   Future<void> _loadNearbyPlaces(double lat, double lng) async {
