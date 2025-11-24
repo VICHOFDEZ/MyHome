@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-const kPrimaryColor = Color(0xFF1B4965);
+// 🎨 PALETA VERDE RELAJACIÓN (OPCIÓN D)
+const kPrimaryColor = Color(0xFF2E7D32);      // verde profundo
+const kSecondaryColor = Color(0xFFA5D6A7);    // verde pastel
+const kBackgroundColor = Color(0xFFF1F8E9);   // fondo suave
 
 class BienestarCalmaScreen extends StatefulWidget {
   const BienestarCalmaScreen({super.key});
@@ -25,7 +28,7 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
   static const _fraseFechaKey = 'frase_del_dia_fecha';
 
   // Lista de frases posibles
-    static const List<String> _frases = [
+  static const List<String> _frases = [
     'Un día a la vez.',
     'Respira, lo estás haciendo bien.',
     'Pequeños pasos también son avance.',
@@ -127,14 +130,6 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
     'Tu valor no se mide por tu productividad.',
     'Aunque avances poco, sigues avanzando.',
   ];
-
-
-  // Grounding (solo estado visual)
-  bool _gPaso1 = false;
-  bool _gPaso2 = false;
-  bool _gPaso3 = false;
-  bool _gPaso4 = false;
-  bool _gPaso5 = false;
 
   // Cosas que me calman
   static const _cosasKey = 'cosas_que_me_calman';
@@ -319,8 +314,8 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
     await showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => _BreathingDialog(
-        duration: const Duration(seconds: 60),
+      builder: (context) => const _BreathingDialog(
+        duration: Duration(seconds: 60),
       ),
     );
   }
@@ -339,16 +334,20 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
   Widget build(BuildContext context) {
     if (_cargando) {
       return const Scaffold(
-        body: Center(child: CircularProgressIndicator()),
+        body: Center(child: CircularProgressIndicator(color: kPrimaryColor)),
       );
     }
 
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        centerTitle: true,
         title: const Text(
           'Bienestar & Calma',
           style: TextStyle(color: kPrimaryColor, fontWeight: FontWeight.bold),
-          ),
+        ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -359,7 +358,7 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
             const SizedBox(height: 16),
             _buildRespiracion(),
             const SizedBox(height: 16),
-            _buildGrounding(),
+            _buildGrounding(),  // ahora solo abre pantalla aparte
             const SizedBox(height: 16),
             _buildPausas(),
             const SizedBox(height: 16),
@@ -376,6 +375,8 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
 
   Widget _buildFraseDelDia() {
     return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -406,7 +407,10 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
 
   Widget _buildRespiracion() {
     return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: ListTile(
+        leading: const Icon(Icons.air, color: kPrimaryColor),
         title: const Text(
           'Respira 1 minuto',
           style: TextStyle(fontWeight: FontWeight.bold),
@@ -414,84 +418,45 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
         subtitle: const Text(
           'Un ejercicio guiado de respiración para calmarte.',
         ),
-        trailing: const Icon(Icons.play_arrow),
+        trailing: const Icon(Icons.play_arrow, color: kPrimaryColor),
         onTap: _mostrarDialogoRespiracion,
       ),
     );
   }
 
+  /// En la pantalla principal, ahora el ejercicio de grounding
+  /// solo aparece como una tarjeta que lleva a otra vista más enfocada.
   Widget _buildGrounding() {
     return Card(
-      child: Padding(
-        padding: const EdgeInsets.all(16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              'Ejercicio para bajar la ansiedad',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Usa lo que te rodea para volver al presente:',
-              style: TextStyle(fontSize: 13),
-            ),
-            const SizedBox(height: 12),
-            _groundingItem(
-              'Nombra 5 cosas que puedes ver',
-              _gPaso1,
-              (v) => setState(() => _gPaso1 = v),
-            ),
-            _groundingItem(
-              'Nombra 4 cosas que puedes tocar',
-              _gPaso2,
-              (v) => setState(() => _gPaso2 = v),
-            ),
-            _groundingItem(
-              'Nombra 3 sonidos que puedes escuchar',
-              _gPaso3,
-              (v) => setState(() => _gPaso3 = v),
-            ),
-            _groundingItem(
-              'Nombra 2 olores que puedes identificar',
-              _gPaso4,
-              (v) => setState(() => _gPaso4 = v),
-            ),
-            _groundingItem(
-              'Nombra 1 sabor que recuerdes o sientas',
-              _gPaso5,
-              (v) => setState(() => _gPaso5 = v),
-            ),
-            const SizedBox(height: 8),
-            Align(
-              alignment: Alignment.centerRight,
-              child: TextButton(
-                onPressed: () {
-                  setState(() {
-                    _gPaso1 = _gPaso2 = _gPaso3 = _gPaso4 = _gPaso5 = false;
-                  });
-                },
-                child: const Text('Reiniciar ejercicio'),
-              ),
-            ),
-          ],
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+      child: ListTile(
+        leading: const Icon(Icons.self_improvement, color: kPrimaryColor),
+        title: const Text(
+          'Ejercicio para bajar la ansiedad',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
+        subtitle: const Text(
+          'Usa lo que te rodea para volver al presente.',
+          style: TextStyle(fontSize: 13),
+        ),
+        trailing: const Icon(Icons.arrow_forward_ios, size: 18),
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => const GroundingExerciseScreen(),
+            ),
+          );
+        },
       ),
-    );
-  }
-
-  Widget _groundingItem(
-      String text, bool value, ValueChanged<bool> onChanged) {
-    return CheckboxListTile(
-      value: value,
-      onChanged: (v) => onChanged(v ?? false),
-      contentPadding: EdgeInsets.zero,
-      title: Text(text, style: const TextStyle(fontSize: 14)),
     );
   }
 
   Widget _buildPausas() {
     return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -523,6 +488,11 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
 
   Widget _pauseButton(String label, Duration duration) {
     return ElevatedButton(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: kPrimaryColor,
+        foregroundColor: Colors.white,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(24)),
+      ),
       onPressed: () => _mostrarDialogoPausa(duration),
       child: Text(label),
     );
@@ -530,6 +500,8 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
 
   Widget _buildCosasCalma() {
     return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -578,8 +550,11 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
               alignment: Alignment.centerRight,
               child: TextButton.icon(
                 onPressed: _agregarCosaCalma,
-                icon: const Icon(Icons.add),
-                label: const Text('Agregar'),
+                icon: const Icon(Icons.add, color: kPrimaryColor),
+                label: const Text(
+                  'Agregar',
+                  style: TextStyle(color: kPrimaryColor),
+                ),
               ),
             ),
           ],
@@ -590,6 +565,8 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
 
   Widget _buildContactoConfianza() {
     return Card(
+      color: Colors.white,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -610,7 +587,10 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
                 alignment: Alignment.centerRight,
                 child: TextButton(
                   onPressed: _editarContactoConfianza,
-                  child: const Text('Agregar contacto'),
+                  child: const Text(
+                    'Agregar contacto',
+                    style: TextStyle(color: kPrimaryColor),
+                  ),
                 ),
               ),
             ] else ...[
@@ -627,6 +607,10 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
                 children: [
                   Expanded(
                     child: ElevatedButton.icon(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: kPrimaryColor,
+                        foregroundColor: Colors.white,
+                      ),
                       onPressed: () => _llamarNumero(_confianzaNumero),
                       icon: const Icon(Icons.phone),
                       label: Text('Llamar a $_confianzaNombre'),
@@ -635,7 +619,7 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
                   const SizedBox(width: 8),
                   IconButton(
                     onPressed: _editarContactoConfianza,
-                    icon: const Icon(Icons.edit),
+                    icon: const Icon(Icons.edit, color: kPrimaryColor),
                     tooltip: 'Editar contacto',
                   ),
                 ],
@@ -648,7 +632,7 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
   }
 }
 
-// --------- DIALOGO DE RESPIRACIÓN ---------
+// --------- DIÁLOGO DE RESPIRACIÓN (LENTO) ---------
 
 class _BreathingDialog extends StatefulWidget {
   final Duration duration;
@@ -661,18 +645,32 @@ class _BreathingDialog extends StatefulWidget {
 
 class _BreathingDialogState extends State<_BreathingDialog> {
   late int _secondsLeft;
+  late int _phaseSecondsLeft;
   Timer? _timer;
   bool _inhale = true;
+
+  // Duraciones de cada fase (puedes ajustar)
+  static const int _inhaleSeconds = 4;
+  static const int _exhaleSeconds = 6;
 
   @override
   void initState() {
     super.initState();
     _secondsLeft = widget.duration.inSeconds;
+    _inhale = true;
+    _phaseSecondsLeft = _inhaleSeconds;
+
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
       setState(() {
         _secondsLeft--;
-        _inhale = !_inhale;
+
+        _phaseSecondsLeft--;
+        if (_phaseSecondsLeft <= 0) {
+          _inhale = !_inhale;
+          _phaseSecondsLeft = _inhale ? _inhaleSeconds : _exhaleSeconds;
+        }
+
         if (_secondsLeft <= 0) {
           _timer?.cancel();
           Navigator.of(context).pop();
@@ -691,16 +689,31 @@ class _BreathingDialogState extends State<_BreathingDialog> {
   Widget build(BuildContext context) {
     final mensaje = _inhale ? 'Inhala profundo…' : 'Exhala lentamente…';
 
+    final totalSeconds = widget.duration.inSeconds;
+    final progress =
+        totalSeconds > 0 ? 1 - (_secondsLeft / totalSeconds) : 0.0;
+
     return AlertDialog(
       title: const Text('Respiración guiada'),
       content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(mensaje),
+          Text(
+            mensaje,
+            style: const TextStyle(
+              fontSize: 18,
+              fontWeight: FontWeight.w600,
+              color: kPrimaryColor,
+            ),
+          ),
           const SizedBox(height: 16),
           Text('Tiempo restante: $_secondsLeft s'),
           const SizedBox(height: 16),
-          const LinearProgressIndicator(),
+          LinearProgressIndicator(
+            value: progress,
+            color: kPrimaryColor,
+            backgroundColor: kSecondaryColor.withOpacity(0.3),
+          ),
         ],
       ),
       actions: [
@@ -709,14 +722,17 @@ class _BreathingDialogState extends State<_BreathingDialog> {
             _timer?.cancel();
             Navigator.pop(context);
           },
-          child: const Text('Detener'),
+          child: const Text(
+            'Detener',
+            style: TextStyle(color: kPrimaryColor),
+          ),
         ),
       ],
     );
   }
 }
 
-// --------- DIALOGO DE PAUSA ---------
+// --------- DIÁLOGO DE PAUSA ---------
 
 class _PauseTimerDialog extends StatefulWidget {
   final Duration duration;
@@ -760,6 +776,10 @@ class _PauseTimerDialogState extends State<_PauseTimerDialog> {
     final tiempoStr =
         '${minutos.toString().padLeft(2, '0')}:${segundos.toString().padLeft(2, '0')}';
 
+    final totalSeconds = widget.duration.inSeconds;
+    final progress =
+        totalSeconds > 0 ? 1 - (_secondsLeft / totalSeconds) : 0.0;
+
     return AlertDialog(
       title: const Text('Pausa en curso'),
       content: Column(
@@ -772,7 +792,11 @@ class _PauseTimerDialogState extends State<_PauseTimerDialog> {
             style: const TextStyle(fontSize: 32, fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: 16),
-          const LinearProgressIndicator(),
+          LinearProgressIndicator(
+            value: progress,
+            color: kPrimaryColor,
+            backgroundColor: kSecondaryColor.withOpacity(0.3),
+          ),
         ],
       ),
       actions: [
@@ -781,9 +805,126 @@ class _PauseTimerDialogState extends State<_PauseTimerDialog> {
             _timer?.cancel();
             Navigator.pop(context);
           },
-          child: const Text('Cancelar'),
+          child: const Text(
+            'Cancelar',
+            style: TextStyle(color: kPrimaryColor),
+          ),
         ),
       ],
+    );
+  }
+}
+
+// --------- PANTALLA APARTE: EJERCICIO PARA BAJAR LA ANSIEDAD ---------
+
+class GroundingExerciseScreen extends StatefulWidget {
+  const GroundingExerciseScreen({super.key});
+
+  @override
+  State<GroundingExerciseScreen> createState() =>
+      _GroundingExerciseScreenState();
+}
+
+class _GroundingExerciseScreenState extends State<GroundingExerciseScreen> {
+  bool _gPaso1 = false;
+  bool _gPaso2 = false;
+  bool _gPaso3 = false;
+  bool _gPaso4 = false;
+  bool _gPaso5 = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: kBackgroundColor,
+      appBar: AppBar(
+        backgroundColor: Colors.white,
+        elevation: 1,
+        centerTitle: true,
+        title: const Text(
+          'Ejercicio para bajar la ansiedad',
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(16),
+        child: Card(
+          color: Colors.white,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Ejercicio para bajar la ansiedad',
+                  style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+                ),
+                const SizedBox(height: 8),
+                const Text(
+                  'Usa lo que te rodea para volver al presente:',
+                  style: TextStyle(fontSize: 13),
+                ),
+                const SizedBox(height: 12),
+                _groundingItem(
+                  'Nombra 5 cosas que puedes ver',
+                  _gPaso1,
+                  (v) => setState(() => _gPaso1 = v),
+                ),
+                _groundingItem(
+                  'Nombra 4 cosas que puedes tocar',
+                  _gPaso2,
+                  (v) => setState(() => _gPaso2 = v),
+                ),
+                _groundingItem(
+                  'Nombra 3 sonidos que puedes escuchar',
+                  _gPaso3,
+                  (v) => setState(() => _gPaso3 = v),
+                ),
+                _groundingItem(
+                  'Nombra 2 olores que puedes identificar',
+                  _gPaso4,
+                  (v) => setState(() => _gPaso4 = v),
+                ),
+                _groundingItem(
+                  'Nombra 1 sabor que recuerdes o sientas',
+                  _gPaso5,
+                  (v) => setState(() => _gPaso5 = v),
+                ),
+                const SizedBox(height: 8),
+                Align(
+                  alignment: Alignment.centerRight,
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        _gPaso1 = _gPaso2 =
+                            _gPaso3 = _gPaso4 = _gPaso5 = false;
+                      });
+                    },
+                    child: const Text(
+                      'Reiniciar ejercicio',
+                      style: TextStyle(color: kPrimaryColor),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _groundingItem(
+      String text, bool value, ValueChanged<bool> onChanged) {
+    return CheckboxListTile(
+      value: value,
+      onChanged: (v) => onChanged(v ?? false),
+      contentPadding: EdgeInsets.zero,
+      activeColor: kPrimaryColor,
+      title: Text(text, style: const TextStyle(fontSize: 14)),
     );
   }
 }
