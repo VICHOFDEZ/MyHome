@@ -290,7 +290,7 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
         'Usa vinagre con agua en partes iguales.',
         'Seca con papel de diario o paño de microfibra.',
       ],
-      'video': 'https://www.youtube.com/watch?v=KNjIkW_8lJk'
+      'video': 'https://youtu.be/C87xGH4PxSk?si=gU_Dv_LttybiqP5B'
     },
     {
       'title': 'Eliminar mal olor del refrigerador',
@@ -299,7 +299,7 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
         'Limpia con bicarbonato y limón.',
         'Deja un recipiente con café molido dentro.',
       ],
-      'video': 'https://www.youtube.com/watch?v=U2uw3Utkp8U'
+      'video': 'https://youtu.be/_llI8KLqEys?si=lyApaT3Z6IqIeOYL'
     },
     {
       'title': 'Quitar manchas de la pared',
@@ -308,7 +308,7 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
         'Frota suavemente con esponja mágica o bicarbonato.',
         'Evita productos abrasivos para no dañar la pintura.',
       ],
-      'video': 'https://www.youtube.com/watch?v=JP0vCkQWWqY'
+      'video': 'https://youtu.be/bmQNECm3Zv4?si=C5O_jVFpvW2NqoTy'
     },
     {
       'title': 'Cómo desinfectar la cocina',
@@ -317,7 +317,7 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
         'Limpia primero con agua y detergente.',
         'Desinfecta con alcohol o vinagre blanco.',
       ],
-      'video': 'https://www.youtube.com/watch?v=BuFtrR9VmFo'
+      'video': 'https://youtu.be/unkdjo7SCGE?si=rum4EBOOxW9AVqX6'
     },
     {
       'title': 'Eliminar moho del baño',
@@ -326,7 +326,7 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
         'Rocía vinagre blanco o cloro diluido sobre el moho.',
         'Cepilla y deja ventilar bien el baño.',
       ],
-      'video': 'https://www.youtube.com/watch?v=BT6tjevHcHg'
+      'video': 'https://youtu.be/uhZu0dGbjzc?si=zfO13J2xTviQ3TYS'
     },
   ];
 

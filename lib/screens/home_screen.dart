@@ -35,7 +35,7 @@ class HomeScreen extends StatelessWidget {
             ),
             const SizedBox(height: 30),
 
-            // 🔽 Botones principales (solo visual, aún sin funcionalidad)
+            // 🔽 Botones principales 
             Expanded(
               child: GridView.count(
                 crossAxisCount: 4,
@@ -114,7 +114,7 @@ class _QuickAccessButton extends StatelessWidget {
           case 'Comida':
             Navigator.pushNamed(context, '/food');
             break;
-          case 'Limpieza':
+          case 'Simulador':
             Navigator.pushNamed(context, '/simulador');
             break;
           case 'Zonas Peligrosas':
