@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+const kPrimaryColor = Color(0xFF1B4965);
+
 class SimuladorVidaForaneaScreen extends StatefulWidget {
   const SimuladorVidaForaneaScreen({super.key});
 
@@ -165,7 +167,10 @@ class _SimuladorVidaForaneaScreenState
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Simulador de Vida Foránea'),
+        title: const Text(
+          'Simulador de Vida',
+          style: TextStyle(color: kPrimaryColor, fontWeight: FontWeight.bold),
+          ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

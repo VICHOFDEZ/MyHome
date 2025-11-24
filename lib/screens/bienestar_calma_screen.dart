@@ -7,6 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+const kPrimaryColor = Color(0xFF1B4965);
+
 class BienestarCalmaScreen extends StatefulWidget {
   const BienestarCalmaScreen({super.key});
 
@@ -343,7 +345,10 @@ class _BienestarCalmaScreenState extends State<BienestarCalmaScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Bienestar & Calma'),
+        title: const Text(
+          'Bienestar & Calma',
+          style: TextStyle(color: kPrimaryColor, fontWeight: FontWeight.bold),
+          ),
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),

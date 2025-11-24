@@ -2,6 +2,12 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+
+// 🎨 PALETA OFICIAL
+const kPrimaryColor = Color(0xFF1B4965);
+const kSecondaryColor = Color(0xFF5FA8D3);
+const kBackgroundColor = Color(0xFFF4F6FA);
 
 class FoodScreen extends StatefulWidget {
   const FoodScreen({super.key});
@@ -32,7 +38,6 @@ class _FoodScreenState extends State<FoodScreen> {
     Position? position;
 
     try {
-      // 🛰️ Intentar usar GPS
       LocationPermission permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied ||
           permission == LocationPermission.deniedForever) {
@@ -42,7 +47,6 @@ class _FoodScreenState extends State<FoodScreen> {
       position = await Geolocator.getCurrentPosition(
           desiredAccuracy: LocationAccuracy.high);
     } catch (_) {
-      // 🚫 GPS falló → permitir escribir comuna
       setState(() {
         gpsFailed = true;
         isLoading = false;
@@ -86,17 +90,21 @@ class _FoodScreenState extends State<FoodScreen> {
       });
     }
 
-    // 🔹 Obtener teléfonos y calcular distancia
+    // 🔹 Obtener teléfonos, website y distancia
     for (var resto in fetched) {
       final detailsUrl =
           'https://maps.googleapis.com/maps/api/place/details/json'
-          '?place_id=${resto['place_id']}&fields=formatted_phone_number&key=$apiKey';
+          '?place_id=${resto['place_id']}'
+          '&fields=formatted_phone_number,website'
+          '&key=$apiKey';
 
       final detailsResponse = await http.get(Uri.parse(detailsUrl));
       final detailsData = json.decode(detailsResponse.body);
 
       resto['phone'] = detailsData['result']?['formatted_phone_number'] ??
           'Teléfono no disponible';
+
+      resto['website'] = detailsData['result']?['website'];
 
       resto['distance'] = Geolocator.distanceBetween(
         lat,
@@ -106,11 +114,8 @@ class _FoodScreenState extends State<FoodScreen> {
       );
     }
 
-    fetched.sort((a, b) {
-      final ratingA = double.tryParse(a['rating'] ?? '0') ?? 0;
-      final ratingB = double.tryParse(b['rating'] ?? '0') ?? 0;
-      return ratingB.compareTo(ratingA);
-    });
+    // 🔹 AHORA ORDENAMOS POR DISTANCIA (de menor a mayor)
+    fetched.sort((a, b) => a['distance'].compareTo(b['distance']));
 
     setState(() {
       restaurants = fetched;
@@ -146,12 +151,18 @@ class _FoodScreenState extends State<FoodScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: const Text('Restaurantes Cercanos 🍽️'),
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Restaurantes Cercanos',
+          style: TextStyle(color: kPrimaryColor, fontWeight: FontWeight.bold),
+        ),
+        centerTitle: true,
+        elevation: 1,
       ),
       body: isLoading
-          ? const Center(child: CircularProgressIndicator())
+          ? const Center(child: CircularProgressIndicator(color: kPrimaryColor))
           : gpsFailed
               ? _buildComunaInput()
               : _buildRestaurantList(),
@@ -167,7 +178,7 @@ class _FoodScreenState extends State<FoodScreen> {
           const Text(
             'No se pudo obtener tu ubicación 📍\nIngresa tu comuna de Santiago:',
             textAlign: TextAlign.center,
-            style: TextStyle(fontSize: 16),
+            style: TextStyle(fontSize: 16, color: kPrimaryColor),
           ),
           const SizedBox(height: 20),
           TextField(
@@ -180,7 +191,9 @@ class _FoodScreenState extends State<FoodScreen> {
           const SizedBox(height: 20),
           ElevatedButton(
             onPressed: _fetchByComuna,
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.teal),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: kPrimaryColor,
+            ),
             child: const Text('Buscar Restaurantes'),
           ),
         ],
@@ -188,36 +201,94 @@ class _FoodScreenState extends State<FoodScreen> {
     );
   }
 
-  Widget _buildRestaurantList() {
-    return restaurants.isEmpty
-        ? const Center(child: Text('No se encontraron restaurantes.'))
-        : ListView.builder(
-            itemCount: restaurants.length,
-            itemBuilder: (context, index) {
-              final r = restaurants[index];
-              return Card(
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                child: ListTile(
-                  leading:
-                      const Icon(Icons.restaurant, color: Colors.teal, size: 28),
-                  title: Text(
-                    r['name'],
-                    style: const TextStyle(
-                        fontWeight: FontWeight.bold, fontSize: 16),
-                  ),
-                  subtitle: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text('⭐ Calificación: ${r['rating']}'),
-                      Text('📞 ${r['phone']}'),
-                      Text(
-                          '📍 ${(r['distance'] / 1000).toStringAsFixed(2)} km'),
-                    ],
-                  ),
+ Widget _buildRestaurantList() {
+  return restaurants.isEmpty
+      ? const Center(child: Text('No se encontraron restaurantes.'))
+      : ListView.builder(
+          itemCount: restaurants.length,
+          itemBuilder: (context, index) {
+            final r = restaurants[index];
+            return Card(
+              color: Colors.white,
+              margin: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+              elevation: 3,
+              child: ListTile(
+                leading: const Icon(
+                  Icons.restaurant,
+                  color: kPrimaryColor,
+                  size: 34,
                 ),
-              );
-            },
-          );
-  }
+
+                // 🔹 SOLO NOMBRE ARRIBA
+                title: Text(
+                  r['name'],
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
+                    color: kPrimaryColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+
+                // 🔹 INFO ABAJO
+                subtitle: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // ⭐ CALIFICACIÓN
+                    Text('⭐ Calificación: ${r['rating']}'),
+
+                    // 📞 TELÉFONO + 🌐 ICONO WEB -> MISMA ALTURA
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Teléfono clickeable
+                        GestureDetector(
+                          onTap: () async {
+                            final phone = r['phone'].replaceAll(' ', '');
+                            final url = Uri.parse('tel:$phone');
+                            if (await canLaunchUrl(url)) {
+                              await launchUrl(url);
+                            }
+                          },
+                          child: Text(
+                            '📞 ${r['phone']}',
+                            style: const TextStyle(
+                              color: kPrimaryColor,
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        ),
+
+                        // 🌐 Icono web alineado con el número
+                        if (r['website'] != null)
+                          GestureDetector(
+                            onTap: () async {
+                              final url = Uri.parse(r['website']);
+                              if (await canLaunchUrl(url)) {
+                                await launchUrl(
+                                  url,
+                                  mode: LaunchMode.externalApplication,
+                                );
+                              }
+                            },
+                            child: const Icon(
+                              Icons.public,
+                              size: 40, // tamaño perfecto para esa línea
+                              color: kSecondaryColor,
+                            ),
+                          ),
+                      ],
+                    ),
+
+                    // 📍 DISTANCIA
+                    Text(
+                      '📍 ${(r['distance'] / 1000).toStringAsFixed(2)} km',
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+}
 }
