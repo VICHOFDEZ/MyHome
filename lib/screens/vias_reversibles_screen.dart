@@ -3,6 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import '../models/via_reversible.dart';
 
+// 🎨 Quita estas constantes si ya las tienes en un archivo de tema global
+const kPrimaryColor = Color(0xFF1B4965);
+const kSecondaryColor = Color(0xFF5FA8D3);
+const kBackgroundColor = Color(0xFFF4F6FA);
+
 class ViasReversiblesMapScreen extends StatefulWidget {
   const ViasReversiblesMapScreen({super.key});
 
@@ -23,13 +28,18 @@ class _ViasReversiblesMapScreenState extends State<ViasReversiblesMapScreen> {
       // Necesitamos mínimo 2 puntos para dibujar una línea
       if (via.puntosMapa.length < 2) continue;
 
+      final bool isSelected = _viaSeleccionada?.nombre == via.nombre;
+
       polylines.add(
         Polyline(
           polylineId: PolylineId(via.nombre),
           points: via.puntosMapa,
-          width: 6,
-          color: Colors.blue,
+          width: isSelected ? 8 : 6,
+          color: isSelected
+              ? kSecondaryColor                         // resaltada
+              : kPrimaryColor.withValues(alpha: 0.85),         // resto de vías
           consumeTapEvents: true,
+          zIndex: isSelected ? 2 : 1,
           onTap: () {
             setState(() {
               _viaSeleccionada = via;
@@ -42,8 +52,19 @@ class _ViasReversiblesMapScreenState extends State<ViasReversiblesMapScreen> {
     const centroRM = LatLng(-33.45, -70.65); // Centro aprox de Santiago
 
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: const Text('Vías reversibles'),
+        backgroundColor: Colors.white,
+        elevation: 1,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: kPrimaryColor),
+        title: const Text(
+          'Vías reversibles',
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Stack(
         children: [
@@ -81,75 +102,85 @@ class _ViasReversiblesMapScreenState extends State<ViasReversiblesMapScreen> {
     String formatTime(TimeOfDay t) =>
         '${t.hour.toString().padLeft(2, '0')}:${t.minute.toString().padLeft(2, '0')}';
 
-    return Card(
-      margin: const EdgeInsets.all(12),
-      elevation: 6,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              via.nombre,
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
-            ),
-            const SizedBox(height: 4),
-            Text(via.comuna, style: const TextStyle(fontSize: 13)),
-            if (via.tramo.isNotEmpty) ...[
+    return Padding(
+      padding: const EdgeInsets.all(12),
+      child: Material(
+        elevation: 8,
+        borderRadius: BorderRadius.circular(18),
+        color: Colors.white,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // Título
+              Text(
+                via.nombre,
+                style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                      color: kPrimaryColor,
+                    ),
+              ),
               const SizedBox(height: 4),
               Text(
-                'Tramo: ${via.tramo}',
-                style: const TextStyle(fontSize: 13),
+                via.comuna,
+                style: const TextStyle(fontSize: 13, color: Colors.grey),
+              ),
+              if (via.tramo.isNotEmpty) ...[
+                const SizedBox(height: 4),
+                Text(
+                  'Tramo: ${via.tramo}',
+                  style: const TextStyle(fontSize: 13),
+                ),
+              ],
+              const SizedBox(height: 10),
+              const Divider(height: 1),
+
+              const SizedBox(height: 10),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.wb_sunny, size: 18, color: kSecondaryColor),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Mañana: ${formatTime(via.amInicio)} – ${formatTime(via.amFin)}\n'
+                      'Sentido: ${via.amSentido}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 6),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Icon(Icons.nights_stay,
+                      size: 18, color: kSecondaryColor),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: Text(
+                      'Tarde: ${formatTime(via.pmInicio)} – ${formatTime(via.pmFin)}\n'
+                      'Sentido: ${via.pmSentido}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 8),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  'Toca el mapa para cerrar',
+                  style: TextStyle(
+                    fontSize: 11,
+                    color: Colors.grey[600],
+                  ),
+                ),
               ),
             ],
-            const SizedBox(height: 8),
-            const Divider(height: 1),
-            const SizedBox(height: 8),
-
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.wb_sunny, size: 18),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    'Mañana: ${formatTime(via.amInicio)} – ${formatTime(via.amFin)}\n'
-                    'Sentido: ${via.amSentido}',
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Icon(Icons.nights_stay, size: 18),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: Text(
-                    'Tarde: ${formatTime(via.pmInicio)} – ${formatTime(via.pmFin)}\n'
-                    'Sentido: ${via.pmSentido}',
-                    style: const TextStyle(fontSize: 13),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Align(
-              alignment: Alignment.centerRight,
-              child: Text(
-                'Toca el mapa para cerrar',
-                style: TextStyle(
-                  fontSize: 11,
-                  color: Colors.grey[600],
-                ),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

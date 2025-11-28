@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// 🎨 Colores globales de la app
+const kPrimaryColor = Color(0xFF1B4965);
+const kSecondaryColor = Color(0xFF5FA8D3);
+const kBackgroundColor = Color(0xFFF4F6FA);
+
 class ClassesScreen extends StatelessWidget {
   const ClassesScreen({super.key});
 
   // 👇 Cambia este correo por el tuyo
   static const String _adminEmail = 'myhomeadmin@gmail.com';
 
-  // ---------- DATOS DE EJEMPLO ----------
+  // ---------- DATOS ----------
 
   List<_TutorCareer> get _careers => [
         _TutorCareer(
@@ -21,7 +26,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Ignacio Pérez',
                   phone: '+56944444444',
                   pricePerHour: 13000,
-                  description: 'Simulaciones, tracker y ejercicios de pruebas antiguas.',
+                  description:
+                      'Simulaciones, tracker y ejercicios de pruebas antiguas.',
                   modality: 'Online',
                 ),
               ],
@@ -33,14 +39,16 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Francisca Martínez',
                   phone: '+56911111111',
                   pricePerHour: 12000,
-                  description: 'Estudiante de 4to año, experiencia haciendo ayudantías y preu.',
+                  description:
+                      'Estudiante de 4to año, experiencia haciendo ayudantías y preu.',
                   modality: 'Online y presencial',
                 ),
                 _Tutor(
                   name: 'Tomás Rojas',
                   phone: '+56922222222',
                   pricePerHour: 10000,
-                  description: 'Explicaciones con muchos ejercicios tipo control.',
+                  description:
+                      'Explicaciones con muchos ejercicios tipo control.',
                   modality: 'Solo online',
                 ),
               ],
@@ -52,7 +60,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Camila Herrera',
                   phone: '+56933333333',
                   pricePerHour: 11000,
-                  description: 'Foco en resolución de guías y preparación de exámenes.',
+                  description:
+                      'Foco en resolución de guías y preparación de exámenes.',
                   modality: 'Presencial en UAI / Metro',
                 ),
               ],
@@ -64,7 +73,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Ignacio Pérez',
                   phone: '+56944444444',
                   pricePerHour: 13000,
-                  description: 'Simulaciones, tracker y ejercicios de pruebas antiguas.',
+                  description:
+                      'Simulaciones, tracker y ejercicios de pruebas antiguas.',
                   modality: 'Online',
                 ),
               ],
@@ -76,19 +86,21 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Ignacio Pérez',
                   phone: '+56944444444',
                   pricePerHour: 13000,
-                  description: 'Simulaciones, tracker y ejercicios de pruebas antiguas.',
+                  description:
+                      'Simulaciones, tracker y ejercicios de pruebas antiguas.',
                   modality: 'Online',
                 ),
               ],
             ),
-             _TutorClass(
+            _TutorClass(
               name: 'Probabilidad y Estadística',
               tutors: [
                 _Tutor(
                   name: 'Ignacio Pérez',
                   phone: '+56944444444',
                   pricePerHour: 13000,
-                  description: 'Simulaciones, tracker y ejercicios de pruebas antiguas.',
+                  description:
+                      'Simulaciones, tracker y ejercicios de pruebas antiguas.',
                   modality: 'Online',
                 ),
               ],
@@ -100,7 +112,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Ignacio Pérez',
                   phone: '+56944444444',
                   pricePerHour: 13000,
-                  description: 'Simulaciones, tracker y ejercicios de pruebas antiguas.',
+                  description:
+                      'Simulaciones, tracker y ejercicios de pruebas antiguas.',
                   modality: 'Online',
                 ),
               ],
@@ -112,7 +125,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Ignacio Pérez',
                   phone: '+56944444444',
                   pricePerHour: 13000,
-                  description: 'Simulaciones, tracker y ejercicios de pruebas antiguas.',
+                  description:
+                      'Simulaciones, tracker y ejercicios de pruebas antiguas.',
                   modality: 'Online',
                 ),
               ],
@@ -124,7 +138,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Ignacio Pérez',
                   phone: '+56944444444',
                   pricePerHour: 13000,
-                  description: 'Simulaciones, tracker y ejercicios de pruebas antiguas.',
+                  description:
+                      'Simulaciones, tracker y ejercicios de pruebas antiguas.',
                   modality: 'Online',
                 ),
               ],
@@ -142,7 +157,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Valentina Soto',
                   phone: '+56955555555',
                   pricePerHour: 9000,
-                  description: 'Clases con ejemplos de la realidad chilena, muchas gráficas.',
+                  description:
+                      'Clases con ejemplos de la realidad chilena, muchas gráficas.',
                   modality: 'Online y presencial',
                 ),
               ],
@@ -154,7 +170,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Diego González',
                   phone: '+56966666666',
                   pricePerHour: 11000,
-                  description: 'Uso de Excel/R, preparación para controles y proyectos.',
+                  description:
+                      'Uso de Excel/R, preparación para controles y proyectos.',
                   modality: 'Online',
                 ),
               ],
@@ -166,7 +183,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Diego González',
                   phone: '+56966666666',
                   pricePerHour: 11000,
-                  description: 'Uso de Excel/R, preparación para controles y proyectos.',
+                  description:
+                      'Uso de Excel/R, preparación para controles y proyectos.',
                   modality: 'Online',
                 ),
               ],
@@ -178,7 +196,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Diego González',
                   phone: '+56966666666',
                   pricePerHour: 11000,
-                  description: 'Uso de Excel/R, preparación para controles y proyectos.',
+                  description:
+                      'Uso de Excel/R, preparación para controles y proyectos.',
                   modality: 'Online',
                 ),
               ],
@@ -190,7 +209,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Diego González',
                   phone: '+56966666666',
                   pricePerHour: 11000,
-                  description: 'Uso de Excel/R, preparación para controles y proyectos.',
+                  description:
+                      'Uso de Excel/R, preparación para controles y proyectos.',
                   modality: 'Online',
                 ),
               ],
@@ -202,7 +222,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Diego González',
                   phone: '+56966666666',
                   pricePerHour: 11000,
-                  description: 'Uso de Excel/R, preparación para controles y proyectos.',
+                  description:
+                      'Uso de Excel/R, preparación para controles y proyectos.',
                   modality: 'Online',
                 ),
               ],
@@ -214,7 +235,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Diego González',
                   phone: '+56966666666',
                   pricePerHour: 11000,
-                  description: 'Uso de Excel/R, preparación para controles y proyectos.',
+                  description:
+                      'Uso de Excel/R, preparación para controles y proyectos.',
                   modality: 'Online',
                 ),
               ],
@@ -232,7 +254,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Sofía Fuentes',
                   phone: '+56977777777',
                   pricePerHour: 9500,
-                  description: 'Te ayuda a entender estadísticas aplicadas a psicología.',
+                  description:
+                      'Te ayuda a entender estadísticas aplicadas a psicología.',
                   modality: 'Online',
                 ),
               ],
@@ -244,7 +267,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Felipe Navarro',
                   phone: '+56988888888',
                   pricePerHour: 10000,
-                  description: 'Resumenes, mapas conceptuales y preparación de orales.',
+                  description:
+                      'Resúmenes, mapas conceptuales y preparación de orales.',
                   modality: 'Presencial región Metropolitana',
                 ),
               ],
@@ -262,7 +286,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Sofía Fuentes',
                   phone: '+56977777777',
                   pricePerHour: 9500,
-                  description: 'Te ayuda a entender estadísticas aplicadas a psicología.',
+                  description:
+                      'Te ayuda a entender estadísticas aplicadas a psicología.',
                   modality: 'Online',
                 ),
               ],
@@ -274,7 +299,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Felipe Navarro',
                   phone: '+56988888888',
                   pricePerHour: 10000,
-                  description: 'Resumenes, mapas conceptuales y preparación de orales.',
+                  description:
+                      'Resúmenes, mapas conceptuales y preparación de orales.',
                   modality: 'Presencial región Metropolitana',
                 ),
               ],
@@ -283,7 +309,8 @@ class ClassesScreen extends StatelessWidget {
         ),
         _TutorCareer(
           name: 'Otras carreras',
-          description: 'Espacio para carreras como International Managment, Periodismo, etc.',
+          description:
+              'Espacio para carreras como International Management, Periodismo, etc.',
           classes: [
             _TutorClass(
               name: 'International Management',
@@ -292,7 +319,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Sofía Fuentes',
                   phone: '+56977777777',
                   pricePerHour: 9500,
-                  description: 'Te ayuda a entender estadísticas aplicadas a psicología.',
+                  description:
+                      'Te ayuda a entender estadísticas aplicadas a psicología.',
                   modality: 'Online',
                 ),
               ],
@@ -304,7 +332,8 @@ class ClassesScreen extends StatelessWidget {
                   name: 'Felipe Navarro',
                   phone: '+56988888888',
                   pricePerHour: 10000,
-                  description: 'Resumenes, mapas conceptuales y preparación de orales.',
+                  description:
+                      'Resúmenes, mapas conceptuales y preparación de orales.',
                   modality: 'Presencial región Metropolitana',
                 ),
               ],
@@ -318,8 +347,19 @@ class ClassesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: const Text('Tutores'),
+        backgroundColor: Colors.white,
+        elevation: 1,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: kPrimaryColor),
+        title: const Text(
+          'Tutores',
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -338,10 +378,35 @@ class ClassesScreen extends StatelessWidget {
     );
   }
 
+  IconData _iconForCareer(String careerName) {
+    if (careerName.contains('Ingeniería Civil')) return Icons.engineering;
+    if (careerName.contains('Ingeniería Comercial')) return Icons.bar_chart;
+    if (careerName.contains('Derecho')) return Icons.balance;
+    if (careerName.contains('Psicología')) return Icons.psychology;
+    return Icons.school;
+  }
+
   Widget _buildCareerTile(_TutorCareer career) {
     return Card(
+      color: Colors.white,
+      elevation: 3,
       margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: ExpansionTile(
+        leading: Container(
+          width: 40,
+          height: 40,
+          decoration: BoxDecoration(
+            color: kSecondaryColor.withValues(alpha: 0.25),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Icon(
+            _iconForCareer(career.name),
+            color: kPrimaryColor,
+          ),
+        ),
         title: Text(
           career.name,
           style: const TextStyle(fontWeight: FontWeight.bold),
@@ -359,9 +424,13 @@ class ClassesScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.only(left: 16, right: 16, bottom: 12),
       child: Card(
+        color: kBackgroundColor,
         elevation: 0,
-        color: Colors.grey[50],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
         child: ExpansionTile(
+          tilePadding: const EdgeInsets.symmetric(horizontal: 12),
           title: Text(
             tutorClass.name,
             style: const TextStyle(fontWeight: FontWeight.w600),
@@ -376,38 +445,75 @@ class ClassesScreen extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
       child: Card(
-        child: ListTile(
-          title: Text(
-            tutor.name,
-            style: const TextStyle(fontWeight: FontWeight.bold),
-          ),
-          subtitle: Column(
+        color: Colors.white,
+        elevation: 2,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(14),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 4),
-              Text(
-                tutor.description,
-                style: const TextStyle(fontSize: 13),
+              // iconito persona
+              Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: kSecondaryColor.withValues(alpha: 0.25),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: const Icon(Icons.person, color: kPrimaryColor),
               ),
-              const SizedBox(height: 6),
-              Text(
-                'Modalidad: ${tutor.modality}',
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
+              const SizedBox(width: 12),
+              // info tutor
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      tutor.name,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 15,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      tutor.description,
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                    const SizedBox(height: 6),
+                    Text(
+                      'Modalidad: ${tutor.modality}',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    Text(
+                      'Valor aproximado: \$${tutor.pricePerHour.toStringAsFixed(0)} / hora',
+                      style: const TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      'Teléfono: ${tutor.phone}',
+                      style: const TextStyle(fontSize: 13),
+                    ),
+                  ],
+                ),
               ),
-              Text(
-                'Valor aproximado: \$${tutor.pricePerHour.toStringAsFixed(0)} / hora',
-                style: const TextStyle(fontSize: 12, color: Colors.grey),
-              ),
-              const SizedBox(height: 4),
-              Text(
-                'Teléfono: ${tutor.phone}',
-                style: const TextStyle(fontSize: 13),
+              const SizedBox(width: 8),
+              // botón llamar
+              IconButton(
+                icon: const Icon(Icons.phone, color: kPrimaryColor),
+                tooltip: 'Llamar',
+                onPressed: () => _callPhone(tutor.phone),
               ),
             ],
-          ),
-          trailing: IconButton(
-            icon: const Icon(Icons.phone),
-            onPressed: () => _callPhone(tutor.phone),
           ),
         ),
       ),
@@ -416,15 +522,28 @@ class ClassesScreen extends StatelessWidget {
 
   Widget _buildBeTutorCard(BuildContext context) {
     return Card(
-      elevation: 2,
+      color: Colors.white,
+      elevation: 3,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Text(
-              '¿Quieres ser tutor?',
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+            Row(
+              children: const [
+                Icon(Icons.volunteer_activism, color: kPrimaryColor),
+                SizedBox(width: 8),
+                Text(
+                  '¿Quieres ser tutor?',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             const Text(
@@ -435,7 +554,7 @@ class ClassesScreen extends StatelessWidget {
             const SizedBox(height: 6),
             const Text(
               '• Nombre completo\n'
-              '• Descripcion en 1 linea\n'
+              '• Descripción en 1 línea\n'
               '• Carrera y universidad\n'
               '• Ramos que puedes hacer clases\n'
               '• Modalidad (online/presencial)\n'
@@ -450,6 +569,13 @@ class ClassesScreen extends StatelessWidget {
                 onPressed: () => _sendTutorEmail(context),
                 icon: const Icon(Icons.email),
                 label: const Text('Postular como tutor'),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: kPrimaryColor,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
               ),
             ),
           ],

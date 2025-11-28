@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'dart:math';
 
+// 🎨 Colores globales
+const kPrimaryColor = Color(0xFF1B4965);
+const kSecondaryColor = Color(0xFF5FA8D3);
+const kBackgroundColor = Color(0xFFF4F6FA);
+
 class ZonasPeligrosasScreen extends StatefulWidget {
   const ZonasPeligrosasScreen({Key? key}) : super(key: key);
 
@@ -59,7 +64,6 @@ class _ZonasPeligrosasScreenState extends State<ZonasPeligrosasScreen> {
     {'nombre': 'Isla de Maipo', 'nivel': 'medio', 'lat': -33.754, 'lng': -70.883, 'detalle': 'Comuna tranquila con algunos delitos menores.'},
     {'nombre': 'Colina', 'nivel': 'medio', 'lat': -33.2833, 'lng': -70.6667, 'detalle': 'Aumento de delincuencia, principalmente "turbazos".'},
 
-
     // Bajo riesgo
     {'nombre': 'Ñuñoa', 'nivel': 'bajo', 'lat': -33.456, 'lng': -70.595, 'detalle': 'Comuna segura y con buena iluminación pública.'},
     {'nombre': 'Providencia', 'nivel': 'bajo', 'lat': -33.431, 'lng': -70.609, 'detalle': 'Alta vigilancia policial y baja tasa delictiva.'},
@@ -79,13 +83,13 @@ class _ZonasPeligrosasScreenState extends State<ZonasPeligrosasScreen> {
       Color color;
       switch (comuna['nivel']) {
         case 'alto':
-          color = Colors.red.withOpacity(0.5);
+          color = Colors.red.withValues(alpha: 0.5);
           break;
         case 'medio':
-          color = Colors.amber.withOpacity(0.5);
+          color = Colors.amber.withValues(alpha: 0.5);
           break;
         default:
-          color = Colors.green.withOpacity(0.5);
+          color = Colors.green.withValues(alpha: 0.5);
       }
       return Circle(
         circleId: CircleId(comuna['nombre']),
@@ -182,50 +186,72 @@ class _ZonasPeligrosasScreenState extends State<ZonasPeligrosasScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: const Text("Zonas peligrosas – RM"),
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: kPrimaryColor),
+        title: const Text(
+          "Zonas peligrosas – RM",
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Stack(
         children: [
           GoogleMap(
             onMapCreated: _onMapCreated,
-            initialCameraPosition: CameraPosition(target: _center, zoom: 10.5),
+            initialCameraPosition:
+                CameraPosition(target: _center, zoom: 10.5),
             circles: getCircles(),
             myLocationEnabled: true,
             onTap: _detectarToqueEnMapa, // 👈 Detecta toque en el mapa
           ),
+
+          // 🔍 Buscador flotando sobre el mapa
           Positioned(
-            top: 10,
+            top: 12,
             left: 15,
             right: 15,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 10),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(10),
+                borderRadius: BorderRadius.circular(24),
                 boxShadow: const [
-                  BoxShadow(color: Colors.black26, blurRadius: 4, offset: Offset(0, 2)),
+                  BoxShadow(
+                    color: Colors.black26,
+                    blurRadius: 4,
+                    offset: Offset(0, 2),
+                  ),
                 ],
               ),
               child: TextField(
                 controller: _searchController,
+                onSubmitted: (value) => _buscarComuna(value),
                 decoration: const InputDecoration(
                   hintText: "Buscar comuna...",
                   border: InputBorder.none,
-                  icon: Icon(Icons.search, color: Colors.redAccent),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: Colors.grey,
+                  ),
                 ),
-                onSubmitted: (value) => _buscarComuna(value),
               ),
             ),
           ),
+
+          // 📝 Leyenda de colores (igual que antes)
           Positioned(
             bottom: 20,
             left: 20,
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: Colors.white.withOpacity(0.85),
+                color: Colors.white.withValues(alpha: 0.85),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: const Text(

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+// 🎨 Paleta de colores global de la app
+const kPrimaryColor = Color(0xFF1B4965);
+const kSecondaryColor = Color(0xFF5FA8D3);
+const kBackgroundColor = Color(0xFFF4F6FA);
 
 class QuickHelpScreen extends StatefulWidget {
   const QuickHelpScreen({Key? key}) : super(key: key);
@@ -22,13 +26,19 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
     '🔒 Cerrajería',
     '❄️ Electrodomésticos',
     '🔥 Calefacción',
-    '🧹 Hogar'
+    '🧹 Hogar',
   ];
 
   @override
   void initState() {
     super.initState();
     _loadHelps();
+  }
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
   }
 
   void _loadHelps() {
@@ -334,13 +344,14 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
 }
 
 
-  void _filterHelps() {
+void _filterHelps() {
     final query = _searchController.text.toLowerCase();
     setState(() {
       filteredHelps = allHelps.where((help) {
-        final matchesCategory = selectedCategory == 'Todas' ||
-            help['category'] == selectedCategory;
-        final matchesText = help['title'].toLowerCase().contains(query);
+        final matchesCategory =
+            selectedCategory == 'Todas' || help['category'] == selectedCategory;
+        final matchesText =
+            (help['title'] as String).toLowerCase().contains(query);
         return matchesCategory && matchesText;
       }).toList();
     });
@@ -362,15 +373,36 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
     );
   }
 
+  IconData _iconForCategory(String category) {
+    if (category.contains('Electricidad')) return Icons.bolt;
+    if (category.contains('Gasfiter')) return Icons.water_drop;
+    if (category.contains('Cerrajería')) return Icons.vpn_key;
+    if (category.contains('Electrodomésticos')) return Icons.kitchen;
+    if (category.contains('Calefacción')) return Icons.local_fire_department;
+    if (category.contains('Hogar')) return Icons.home_repair_service;
+    return Icons.build;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: const Text('Ayudas rápidas 🧰'),
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: kPrimaryColor),
+        title: const Text(
+          'Ayudas rápidas 🧰',
+          style: TextStyle(
+            color: kPrimaryColor,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
       ),
       body: Column(
         children: [
+          // 🔍 Buscador
           Padding(
             padding: const EdgeInsets.all(12),
             child: TextField(
@@ -378,9 +410,19 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
               onChanged: (_) => _filterHelps(),
               decoration: InputDecoration(
                 hintText: 'Buscar ayuda...',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(20),
+                prefixIcon: const Icon(Icons.search, color: Colors.grey),
+                filled: true,
+                fillColor: Colors.white,
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 0, horizontal: 16),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide: const BorderSide(color: Colors.grey),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24),
+                  borderSide:
+                      const BorderSide(color: kPrimaryColor, width: 1.6),
                 ),
               ),
             ),
@@ -391,19 +433,27 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
             height: 40,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 12),
               itemCount: categories.length,
-              separatorBuilder: (_, __) => const SizedBox(width: 6),
+              separatorBuilder: (_, __) => const SizedBox(width: 8),
               itemBuilder: (context, index) {
                 final category = categories[index];
                 final selected = category == selectedCategory;
                 return ChoiceChip(
-                  label: Text(category),
+                  label: Text(
+                    category,
+                    style: TextStyle(
+                      color: selected ? Colors.white : kPrimaryColor,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
                   selected: selected,
                   onSelected: (_) => _onCategorySelected(category),
-                  selectedColor: Colors.teal.shade300,
-                  backgroundColor: Colors.teal.shade100,
-                  labelStyle: TextStyle(
-                    color: selected ? Colors.white : Colors.black,
+                  selectedColor: kPrimaryColor,
+                  backgroundColor:
+                      kSecondaryColor.withValues(alpha: 0.25), // en vez de withOpacity
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
                   ),
                 );
               },
@@ -414,23 +464,74 @@ class _QuickHelpScreenState extends State<QuickHelpScreen> {
           // 📋 Lista de ayudas
           Expanded(
             child: filteredHelps.isEmpty
-                ? const Center(child: Text("No se encontraron resultados."))
+                ? const Center(
+                    child: Text(
+                      "No se encontraron resultados.",
+                      style: TextStyle(color: Colors.grey),
+                    ),
+                  )
                 : ListView.builder(
                     itemCount: filteredHelps.length,
                     itemBuilder: (context, index) {
                       final help = filteredHelps[index];
+                      final String title = help['title'] as String;
+                      final String category = help['category'] as String;
+
                       return Card(
+                        color: Colors.white,
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(16),
                         ),
                         elevation: 3,
                         margin: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
+                          horizontal: 12,
+                          vertical: 6,
+                        ),
                         child: ListTile(
-                          title: Text(help['title']),
-                          subtitle: Text(help['category']),
-                          trailing: const Icon(Icons.arrow_forward_ios,
-                              size: 16, color: Colors.teal),
+                          leading: Container(
+                            width: 40,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: kSecondaryColor
+                                  .withValues(alpha: 0.25), // fondo icono
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Icon(
+                              _iconForCategory(category),
+                              color: kPrimaryColor,
+                              size: 22,
+                            ),
+                          ),
+                          title: Text(
+                            title,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 15,
+                            ),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 4),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8, vertical: 3),
+                              decoration: BoxDecoration(
+                                color: kBackgroundColor,
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+                              child: Text(
+                                category,
+                                style: const TextStyle(
+                                  fontSize: 11,
+                                  color: kPrimaryColor,
+                                ),
+                              ),
+                            ),
+                          ),
+                          trailing: const Icon(
+                            Icons.chevron_right,
+                            size: 18,
+                            color: Colors.grey,
+                          ),
                           onTap: () => _openHelpDetail(help),
                         ),
                       );
@@ -451,28 +552,72 @@ class HelpDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final String title = help['title'] as String;
+    final List<dynamic> steps = help['steps'] as List<dynamic>;
+    final String videoUrl = help['video'] as String;
+
     return Scaffold(
+      backgroundColor: kBackgroundColor,
       appBar: AppBar(
-        title: Text(help['title']),
-        backgroundColor: Colors.teal,
+        backgroundColor: Colors.white,
+        elevation: 1,
+        centerTitle: true,
+        iconTheme: const IconThemeData(color: kPrimaryColor),
+        title: Text(
+          title,
+          style: const TextStyle(
+            color: kPrimaryColor,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
       ),
-      body: Padding(
+      body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text('Pasos a seguir:',
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
-            const SizedBox(height: 8),
-            ...help['steps'].map<Widget>((s) => Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 4),
-                  child: Text('• $s'),
-                )),
+            // Card de pasos
+            Card(
+              color: Colors.white,
+              elevation: 3,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Pasos a seguir',
+                      style: TextStyle(
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: kPrimaryColor,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ...steps.map<Widget>(
+                      (s) => Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 4),
+                        child: Text('• ${s.toString()}'),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
             const SizedBox(height: 20),
-            Text('Video explicativo:',
-                style: const TextStyle(
-                    fontSize: 18, fontWeight: FontWeight.bold)),
+
+            // Botón de video
+            const Text(
+              'Video explicativo',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: kPrimaryColor,
+              ),
+            ),
             const SizedBox(height: 8),
             Center(
               child: ElevatedButton.icon(
@@ -481,14 +626,22 @@ class HelpDetailScreen extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.redAccent,
                   foregroundColor: Colors.white,
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
+                  ),
                 ),
                 onPressed: () async {
-                  final Uri videoUrl = Uri.parse(help['video']);
-                  if (await canLaunchUrl(videoUrl)) {
-                    await launchUrl(videoUrl, mode: LaunchMode.externalApplication);
+                  final Uri uri = Uri.parse(videoUrl);
+                  if (await canLaunchUrl(uri)) {
+                    await launchUrl(uri,
+                        mode: LaunchMode.externalApplication);
                   } else {
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text("No se pudo abrir el video")),
+                      const SnackBar(
+                        content: Text("No se pudo abrir el video"),
+                      ),
                     );
                   }
                 },

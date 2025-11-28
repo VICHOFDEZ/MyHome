@@ -37,6 +37,8 @@ dependencies:
   geolocator: ^10.1.0
   google_maps_flutter: ^2.7.0
   shared_preferences: ^2.2.0
+  geocoding: ^2.1.0
+  table_calendar: ^3.0.9
 
 
 
