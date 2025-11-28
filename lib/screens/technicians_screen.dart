@@ -18,7 +18,7 @@ class TechniciansScreen extends StatelessWidget {
         centerTitle: true,
         iconTheme: const IconThemeData(color: kPrimaryColor),
         title: const Text(
-          "Técnicos y Ayudas Rápidas",
+          "Servicios y Guías",
           style: TextStyle(
             color: kPrimaryColor,
             fontWeight: FontWeight.bold,
