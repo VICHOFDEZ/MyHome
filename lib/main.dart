@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
+import 'package:intl/date_symbol_data_local.dart';
 
 // === Importa tus pantallas ===
 import 'screens/home_screen.dart';
@@ -15,13 +16,16 @@ import 'screens/zonas_peligrosas_screen.dart';
 import 'screens/vias_reversibles_screen.dart';
 import 'screens/bienestar_calma_screen.dart';
 
-
 // === Configuración del plugin de notificaciones ===
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // ✅ Inicializar datos de formato de fecha (para DateFormat)
+  await initializeDateFormatting('es_CL', null);
+
   tz.initializeTimeZones();
 
   // Inicialización del plugin en Android
@@ -33,20 +37,19 @@ Future<void> main() async {
 
   await flutterLocalNotificationsPlugin.initialize(initializationSettings);
 
-// 🔔 Pide permiso de notificación (Android 13+)
-final androidPlugin = flutterLocalNotificationsPlugin
-    .resolvePlatformSpecificImplementation<
-        AndroidFlutterLocalNotificationsPlugin>();
+  // 🔔 Pide permiso de notificación (Android 13+)
+  final androidPlugin = flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+          AndroidFlutterLocalNotificationsPlugin>();
 
-if (androidPlugin != null) {
-  final granted = await androidPlugin.requestNotificationsPermission();
-  if (granted ?? false) {
-    debugPrint('✅ Permiso de notificaciones concedido');
-  } else {
-    debugPrint('❌ Permiso de notificaciones denegado');
+  if (androidPlugin != null) {
+    final granted = await androidPlugin.requestNotificationsPermission();
+    if (granted ?? false) {
+      debugPrint('✅ Permiso de notificaciones concedido');
+    } else {
+      debugPrint('❌ Permiso de notificaciones denegado');
+    }
   }
-}
-
 
   runApp(const MyHomeApp());
 }
@@ -77,7 +80,6 @@ class MyHomeApp extends StatelessWidget {
         '/zonas': (context) => const ZonasPeligrosasScreen(),
         '/vias': (context) => const ViasReversiblesMapScreen(),
         '/bienestar': (context) => const BienestarCalmaScreen(),
-
       },
     );
   }
